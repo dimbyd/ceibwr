@@ -30,5 +30,5 @@ A `pytest` framework is included, but currently only tests the classification
 methods. 
 
 ### Logging
-Logging is virtually non-existent, with only "Hello" and "Goodbye" implemented in the constructor for `Efrydydd`.
+Logging is virtually non-existent, with only "Hello" and "Goodbye" implemented in the constructor for `Peiriant`.
 
