@@ -7,7 +7,6 @@ import sys
 import logging
 from argparse import ArgumentParser
 
-# God object
 from ceibwr.peiriant import Peiriant
 
 from ceibwr.cysonion import llythrenwau

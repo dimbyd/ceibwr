@@ -1,0 +1,28 @@
+[project]
+name = "ceibwr"
+version = "0.1"
+description = "Meddalwedd Gynganeddol"
+authors = [
+    {name = "dimbyd", email = "evansd8@cf.ac.uk"}
+]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "lxml", "pyaml", "tabulate", "python-slugify",
+]
+
+[project.urls]
+"Repository" = "https://github.com/dimbyd/ceibwr"
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = [
+    "ceibwr",
+]
+
+[tool.setuptools.package-dir]
+"" = "ceibwr"

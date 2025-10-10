@@ -1,10 +1,18 @@
 # ceibwr
 Meddalwedd Gynganeddol
 
-## Install
-Pan fydd y pecyn ar PyPi ...
+### Install from PyPI
+
+```bash
+pip install ceibwr
 ```
-$ python3 -m pip install ceibwr
+
+### Install from Source (GitHub)
+
+```bash
+git clone https://github.com/dimbyd/ceibwr.git
+cd ceibwr
+pip install .
 ```
 
 ## TODO Ieithyddol
