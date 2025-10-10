@@ -12,11 +12,7 @@ $ python3 -m pip install ceibwr
 Y broblem fwyaf yw camacennu. Y rheol cyntaf yw bod geiriau unsill yn acennog, a geiriau lluosill yn ddiacen. Mae'r meddalwedd yn cynnwys nifer o "hacks" i ddarganfod geiriau
 lluosill acennog (e.e. os oes `h` yn union cyn y sillaf olaf), ond does dim trefn ar rhain eto. Mae modd cofrestru "eithriadau", ond ar hyn y bryd dylai'r ffocws fod ar ddatblygu set o reolau trefnus.
 
-### W ansillafog
-Mae'r rhaglen yn camacennu rhai geiriau.
-- Yn aml mae hyn oherwydd yr *w-ansillafog* felltith.
-- Oes rheolau ar gael am rhain?
-- Mae hefyd angen ystyried yr `wy` dalgron a'r `wy` leddf mewn ffordd drefnus.
+Mae camacennu yn aml oherwydd yr **w-ansillafog** felltith, a hefyd yr `wy`-dalgron a'r `wy`-leddf. Oes rheolau ar gyfer rhain?
 
 
 ## TODO Technegol
