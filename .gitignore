@@ -1,3 +1,16 @@
+# ceibwr (dimbyd)
+llyfrau/
+cerddi-dan-hawlfraint/
+cerddi-eraill/
+rhyddiaith/
+
+.DS_Store
+*.code-workspace
+.git/
+.venv/
+logs/
+docs/source/generated
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
