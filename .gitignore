@@ -11,6 +11,8 @@ rhyddiaith/
 logs/
 docs/source/generated
 
+.egg-info
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

@@ -13,7 +13,7 @@ from ceibwr.cysonion import llythrenwau
 from ceibwr.llinell import Llinell
 
 # static
-from ceibwr.settings import LOG_FILE_NAME
+# from ceibwr.settings import LOG_FILE_NAME
 from ceibwr.settings import DATABASES
 odlau_file = DATABASES['default']['ODLIADUR']        # json
 geirfa_file = DATABASES['default']['GEIRFA']      # txt
@@ -181,12 +181,14 @@ def main(args=None):
 if __name__ == '__main__':
 
     # TODO: logging drwyddi draw
-    logging.basicConfig(
-        filename=LOG_FILE_NAME,
-        filemode='w',
-        encoding='utf-8',
-        level=logging.DEBUG,
-    )
-    logging.info('Bore da.')
+    # logging.basicConfig(
+    #     filename=LOG_FILE_NAME,
+    #     filemode='w',
+    #     encoding='utf-8',
+    #     level=logging.DEBUG,
+    # )
+    # logging.info('Bore da.')
+
     main()
-    logging.info('Nos da.')
+
+    # logging.info('Nos da.')
