@@ -20,7 +20,7 @@ pip install ceibwr
 
 ### Datryswr
 ```bash
-$ python3 main.py -d "Wele rith fel ymyl rhod" # demo llinellau
+$ python3 main.py -d "Wele rith fel ymyl rhod"
 $ python3 main.py -df ./data/cerddi/cerdd.txt
 ```
 
