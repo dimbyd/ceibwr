@@ -1,8 +1,8 @@
 # ceibwr
-Meddalwedd Gynganeddol
 
+### Meddalwedd Gynganeddol
 
-### Install from Source (GitHub)
+#### Install from source 
 
 ```bash
 git clone https://github.com/dimbyd/ceibwr.git
@@ -10,7 +10,7 @@ cd ceibwr
 pip install .
 ```
 
-### Install from PyPI (not available)
+#### Install from PyPI (not available)
 
 ```bash
 pip install ceibwr
