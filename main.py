@@ -4,7 +4,7 @@ CLI entry point.
 '''
 
 import sys
-import logging
+# import logging
 from argparse import ArgumentParser
 
 from ceibwr.peiriant import Peiriant

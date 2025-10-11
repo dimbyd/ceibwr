@@ -16,13 +16,17 @@ dependencies = [
 "Repository" = "https://github.com/dimbyd/ceibwr"
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-py-modules = [
-    "ceibwr",
-]
+[tool.setuptools.packages.find]
+include = ["ceibwr*"]
+namespaces = false
 
-[tool.setuptools.package-dir]
-"" = "ceibwr"
+# [tool.setuptools]
+# py-modules = [
+#     "ceibwr",
+# ]
+
+# [tool.setuptools.package-dir]
+# "" = "ceibwr"
