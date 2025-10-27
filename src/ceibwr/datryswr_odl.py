@@ -644,7 +644,8 @@ def main():
         ("hynny", "Gymru"),
         ("caniatâd", "adeilad"),
         ("helynt", "gwynt"),
-        ("ddôr", "agor")
+        ("ddôr", "agor"),
+        ("Cyffredin", "gwin"),
     )
 
     for key in [

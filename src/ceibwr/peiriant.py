@@ -15,6 +15,7 @@ Mae'r ddwy yn uno ar lefel `Gair`.
 """
 
 import os
+import re
 import yaml
 import logging
 from subprocess import call  # for clrscr
@@ -69,54 +70,11 @@ class Peiriant(object):
     def __repr__(self):
         return r'\n\n'.join([repr(uned) for uned in self.unedau])
 
-    # TODO: check for unicode only (catch UnicodeDecodeError)
-    # This happened when uploading a PDF file
+    # TODO: check am unicode yn unig (catch UnicodeDecodeError)
+    # Ar hyn o bryd mae'n crasho pan yn uwchlwytho PDF i'r gronfa
     def read(self, infile):
         with open(infile) as f:
             return f.read()
-
-    def chomp(self, s):
-        """
-        Adeiladu rhestr penillion o fewnbwn str (utf-8)
-            - <CR> ar ddiwedd llinell (\n)
-            - <CR><CR> ar ddiwedd penillion (\n\n)
-            - anwybyddu llinellau sy'n dechrau gyda '#'
-            - anwybyddu llinellau rhwng '---' a '---' (yaml)
-
-        Return types: `Llinell`, `Pennill` neu `Cerdd`
-
-        Dylai'r yaml headers wedi cael eu stripio cyn hyn!
-        TODO: prosesu fesul `char` (stream processing)
-        """
-
-        # type check
-        if type(s) is not str:
-            raise TypeError('Mae angen `str` fan hyn.')
-
-        hysbys = []
-
-        # strip trailing newlines
-        s = s.strip()
-        
-        # strip comments
-        ss = []
-        for line in s.splitlines():
-            if line.startswith('#'):
-                hysbys.append(line)
-            else:
-                ss.append(line)
-        s = os.linesep.join(ss)
-
-        blociau = s.strip().split(os.linesep + os.linesep)
-
-        if len(blociau) > 1:
-            return Cerdd(s)
-
-        bloc = blociau[0].strip().split(os.linesep)
-        if len(bloc) > 1:
-            return Pennill(s)
-
-        return Llinell(s)
 
     def parse(self, s):
         """Parse YAML header into `dict` then apply `chomp` to remainder.
@@ -152,6 +110,57 @@ class Peiriant(object):
 
         return (meta, self.chomp(s))
 
+    def chomp(self, s):
+        """
+        Adeiladu rhestr penillion o fewnbwn str (utf-8)
+            - <CR> ar ddiwedd llinell (\n)
+            - <CR><CR> ar ddiwedd penillion (\n\n)
+            - anwybyddu llinellau sy'n dechrau gyda '#'
+            - anwybyddu llinellau rhwng '---' a '---' (yaml)
+
+        Return types: `Llinell`, `Pennill` neu `Cerdd`
+
+        Dylai'r yaml headers wedi cael eu stripio cyn hyn!
+        TODO: prosesu fesul `char` (stream processing)
+        """
+
+        # type check
+        if type(s) is not str:
+            raise TypeError('Mae angen `str` fan hyn.')
+
+        hysbys = []
+
+        # strip trailing newlines
+        s = s.strip()
+        
+        # strip comments
+        ss = []
+        for line in s.splitlines():
+            if line.startswith('#'):
+                hysbys.append(line)
+            else:
+                ss.append(line)
+        s = os.linesep.join(ss)
+
+        # mae hwn yn methu os oes mwy nag un "blank line"
+        # blociau = s.strip().split(os.linesep + os.linesep)
+
+        # hac
+        pattern = r'\n{2,}'
+        blociau = re.split(pattern, s.strip())
+        s = (os.linesep + os.linesep).join(blociau)
+        # print('BLOCIAU:', blociau)
+        # print('SNEW:>', s, '<')
+
+        if len(blociau) > 1:
+            return Cerdd(s)
+
+        bloc = blociau[0].strip().split(os.linesep)
+        if len(bloc) > 1:
+            return Pennill(s)
+
+        return Llinell(s)
+
     def datryswr(self, uned, unigol=True):
         """
         Datrys Llinell, Pennill neu Cerdd.
@@ -182,7 +191,7 @@ class Peiriant(object):
         dats = []
         dim_diolch = ['LLL', 'SAL', 'CWG', 'TWG']
 
-        paragraffau = s.strip().split('\n')
+        paragraffau = s.strip().split(os.linesep)
         for parag in paragraffau:
 
             brawddegau = parag.strip().split('.')

@@ -378,6 +378,14 @@ def prawf_cytseinedd(x, y, proest=False):
     # Pam na diffinio ffwythiant `dosbarth()` wedi seilio ar 
     # y rhestri nodau, yn y dosbarth `Cytseinedd`.
 
+    # croes/traws wreiddgoll
+    # Mae'n bosib cael sawl cytsain gwreiddgoll
+    # rhwng ail a thrydedd rhan cynghanedd sain.
+    # Ond mae hefyd angen upper limit er mwyn
+    # osgoi cyfateb dim cytseiniaid o flaen yr
+    # acenion. Felly mae angen checko bod |gefyll_blaen| > 0 ?
+
+
     # 1. croes (cyfatebiaeth union)
     if not x_blaen and not y_blaen:
         if gefyll:
@@ -399,8 +407,8 @@ def prawf_cytseinedd(x, y, proest=False):
                 else:
                     cyts.dosbarth = "LLA"
                 cyts.hysbys.append("n-wreiddgoll")
-            else:
-                cyts.dosbarth = 'CWG'
+        else:
+            cyts.dosbarth = 'CWG'
 
     # 3. traws
     elif not x_blaen and y_blaen:
@@ -437,8 +445,8 @@ def prawf_cytseinedd(x, y, proest=False):
                     cyts.hysbys.append("n-wreiddgoll")
                 else:
                     cyts.dosbarth = "LLA"
-            else:
-                cyts.dosbarth = "TWG"
+        else:
+            cyts.dosbarth = "TWG"
 
     # dim
     else:
@@ -471,6 +479,8 @@ def main():
         ("Y miniog", "ei ymennydd"),
         ("cwmpas", "campwaith"),
         ("Ar wely’r ferch;", "alar fu."),
+        ("a gwin", "a gawn"),
+        ("mewn llan", "a llys"),
     ]
 
     for key in [

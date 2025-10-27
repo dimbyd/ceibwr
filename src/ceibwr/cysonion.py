@@ -181,7 +181,7 @@ llafariaid = llafariaid_byrion + llafariaid_hirion
 deuseiniaid = {
     "hiatus": [
         "ao",  # parhaol
-        "ea",  # eang
+        "ea",  # eang, deallwn
         "eo",  # eos
         "oa",  # ffoadur
         "uo",  # duon
@@ -190,6 +190,7 @@ deuseiniaid = {
         "ïo",  # gwnïo
         "üw",  # düwch
         "ŵa",  # dŵad, pŵer
+        "ya",  # lletya, mwyar
     ],
     "talgron": [
         "ia",  # cariad
@@ -230,7 +231,7 @@ deuseiniaid = {
         "oy",  #
     ],
     "eraill": [
-        "ay", "ue", "ya", "uy", "yu", "ye", "ii",
+        "ay", "ue", "uy", "yu", "ye", "ii",
         "yo", "oo", "aa", "iu", "yy", "ui", "uu",
     ],
 }
@@ -440,12 +441,6 @@ gogwyddeiriau = [
     "i’m",
     "o’r",
     "O’r",
-    # misc
-    "fel",
-    "mae'n",
-    "mae’n",
-    "gan",
-    "go",
 ]
 
 # ychwanegu atalnodau i'r gogwyddeiriau (hack)

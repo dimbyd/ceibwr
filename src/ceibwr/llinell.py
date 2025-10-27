@@ -33,9 +33,11 @@ class Llinell(TreeNode):
             t = re.split("(os.linesep| +)", s)
             svals = [c + d for c, d in list(zip(t[::2], t[1::2]+[os.linesep]))]
             for ss in svals:
-                gair = Gair(ss.lstrip(), parent=self)
-                # print('G:', repr(gair), '>{}<'.format(ss.lstrip()))
-                self.children.append(gair)
+                ss = ss.lstrip()
+                if ss:
+                    gair = Gair(ss.lstrip(), parent=self)
+                    # print('G:', repr(gair), '>{}<'.format(ss.lstrip()))
+                    self.children.append(gair)
 
         # bad input
         else:

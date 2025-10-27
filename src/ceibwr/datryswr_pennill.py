@@ -65,7 +65,7 @@ def datryswr_pennill(pennill, fesul_llinell=False):
     for llinell in pennill.children:
         dat = datryswr_llinell(llinell, pengoll=True)
         dats.append(dat)
-
+    
     # debug
     if fesul_llinell:
         return Amwys(dats)  # rhestr o ddatrysiadau llinell yn unig

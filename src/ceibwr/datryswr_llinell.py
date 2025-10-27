@@ -52,6 +52,7 @@ def datryswr_llinell(llinell, unigol=True, pengoll=False):
     # datrysiadau
     datrysiadau = []
     for rhaniad in rhaniadau:
+        # print('rh:', repr(rhaniad))
 
         # hepgor gogwyddeiriau ar yr orffwysfa
         if any([str(rhan[-1]).lower() in gogwyddeiriau for rhan in rhaniad]):
@@ -62,7 +63,7 @@ def datryswr_llinell(llinell, unigol=True, pengoll=False):
         
         datrysiadau.append(datrysiad)
 
-    datrysiadau = chwynnu(datrysiadau, dileu_gwreiddgoll=False)
+    datrysiadau = chwynnu(datrysiadau, dileu_gwreiddgoll=True)
 
     # dim byd
     if not datrysiadau:
@@ -70,6 +71,7 @@ def datryswr_llinell(llinell, unigol=True, pengoll=False):
 
     if unigol:
         return best_guess(datrysiadau, cyfuno=False)
+    
 
     return datrysiadau
 
@@ -128,6 +130,10 @@ def main():
         # "Prynu rhost, nid er bostiaw,",
         # "Pan elai y minteioedd",
         "I'm hôl, fo'i clywid ymhell",
+        "A gorau gair gan Fair fu.",
+        "Cymryd, balch o febyd fum,",  
+        # "Cyffredin, a gwin a gawn.",  # proest
+        "fy nyn gan mewn llan a llys,",
     )
 
     profion['problem_seinyddio'] = (
@@ -199,13 +205,14 @@ def main():
             llinell = Llinell(s)
             # print(repr(llinell))
             se.seinyddio(llinell)
+            # print(llinell.sain())
              
             # datrys
             dat = datryswr_llinell(llinell, pengoll=True)
 
             # show
             print()
-            print(dat.sain())
+            # print(dat.sain())
             print(dat.show_fancy(toriad='|', cmap=cmap))
             print(beiro.cyan(dat.dosbarth) if dat.dosbarth else beiro.coch('XXX'))
             print('----------')

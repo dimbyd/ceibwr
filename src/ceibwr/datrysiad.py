@@ -297,9 +297,11 @@ class Datrysiad(Rhaniad):
             return eol.join([acenion_str, odlau_str, cytseinedd_str])
 
     # tabulate
-    def create_headers(self):
+    def create_headers(self, fullpad=False):
 
         headers = ["Llinell", "CNG", "NSI", "ACE", "CYT", "ODF"]
+        if fullpad:
+            return headers + ["CWP", "ODG", "MES", "ODL", 'AWD']
         
         if self.lefel() > 1:
             headers.extend(["CWP", "ODG"])
@@ -312,7 +314,7 @@ class Datrysiad(Rhaniad):
         
         return headers
 
-    def _create_rows(self, fancy=False, toriad='|', bwlch=' ', eol=os.linesep, cmap=None):
+    def _create_rows(self, fullpad=False, fancy=False, toriad='|', bwlch=' ', eol=os.linesep, cmap=None):
 
         rows = []
         if self.lefel() == 1:
@@ -327,6 +329,8 @@ class Datrysiad(Rhaniad):
                    self.cytseinedd_str(),
                    self.odlau_str()
                    ]
+            if fullpad:
+                row = row + [None]*5
             return [row]
 
         # hack Toddaid Byr (revert i'r llinellau gwreiddiol)
@@ -345,27 +349,33 @@ class Datrysiad(Rhaniad):
                     if nod in ynew.cytseinedd:
                         xnew.cytseinedd[nod] = ynew.cytseinedd[nod]
             
-            xnew_row = xnew.create_rows(fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
-            ynew_row = ynew.create_rows(fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
+            xnew_row = xnew.create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
+            ynew_row = ynew.create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
             rows.extend(xnew_row)
             rows.extend(ynew_row)
 
         # recursive call
         else:
             for child in self.children:
-                child_rows = child._create_rows(fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
+                child_rows = child._create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
                 rows.extend(child_rows)
 
         # pad
         if self.lefel() == 2:
             for idx in range(len(rows)):
-                rows[idx] = rows[idx] + [None]*2
+                if not fullpad:
+                    rows[idx] = rows[idx] + [None]*2
             row = [None]*6 + [self.dosbarth, self.odlau_str()]
+            if fullpad:
+                row = row + [None]*3
 
         elif self.lefel() == 3:
             for idx in range(len(rows)):
-                rows[idx] = rows[idx] + [None]*2
+                if not fullpad:
+                    rows[idx] = rows[idx] + [None]*2
             row = [None]*8 + [self.dosbarth, self.odlau_str()]
+            if fullpad:
+                row = row + [None]
 
         else:
             for idx in range(len(rows)):
@@ -375,11 +385,11 @@ class Datrysiad(Rhaniad):
         rows.append(row)
         return rows
 
-    def create_rows(self, headers=False, fancy=False, toriad='|', bwlch=' ', eol=os.linesep, cmap=None):
-        rows = self._create_rows(fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
+    def create_rows(self, fullpad=False, headers=False, fancy=False, toriad='|', bwlch=' ', eol=os.linesep, cmap=None):
+        rows = self._create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
         if headers:
             ncols = len(rows[0])
-            head = self.create_headers()[:ncols]
+            head = self.create_headers(fullpad=fullpad)[:ncols]
             rows.insert(0, head)
         return rows
 
@@ -532,6 +542,8 @@ def main():
     dat = datryswr_llinell(ll)
     tab = dat.create_tabular(fancy=True, cmap=cmap)
     print(tab)
+    rows = dat.create_rows(fullpad=True, headers=True)
+    print(rows)
 
     # Test Pennill (MES)
     from ceibwr.pennill import Pennill
@@ -541,10 +553,28 @@ def main():
 Campwaith dewin hynod;
 Hen linell bell nad yw'n bod,
 Hen derfyn nad yw'n darfod."""
-    p = Pennill(s)
-    dat = datryswr_pennill(p)
+
+    s = """Dwyglust feinion aflonydd
+Dail saets wrth ei dâl y sydd
+Trwsio fal golewo glain
+Y bu wydrwr ei bedrain
+
+Dwyglust feinion aflonydd
+Dail saets wrth ei dâl y sydd
+Trwsio fal golewo glain
+Y bu wydrwr ei bedrain"""
+    from ceibwr.cerdd import Cerdd
+    from ceibwr.datryswr_cerdd import datryswr_cerdd
+    # p = Pennill(s)
+    # dat = datryswr_pennill(p)
+    c = Cerdd(s)
+    dat = datryswr_cerdd(c)
     tab = dat.create_tabular(fancy=True, cmap=cmap)
     print(tab)
+
+    rows = dat.create_rows(fullpad=True, headers=True)
+    for row in rows:
+        print(row)
 
 
 if __name__ == "__main__":
