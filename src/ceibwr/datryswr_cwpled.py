@@ -289,6 +289,14 @@ def demo():
             "Daeth i'r lofa dalog swyddogion,",
             "A mud weithwyr lle bu cymdeithion.",
         ),
+        (
+            "Bid y brud a'r byd heb wres,",
+            "Brud, hyd dydd brawd y toddes;",
+        ),
+        (
+            "Y bardd trwm dan bridd tramor - y dwylaw",
+            "Na ddidolir rhagor:",
+        ),
     )
 
     for key in [

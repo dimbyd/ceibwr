@@ -56,7 +56,7 @@ class Peiriant(object):
     def __init__(self, cmap=None):
 
         # start
-        logging.info("Ganwyd y Peiriant, Gwas y Glêr")
+        # logging.info("Ganwyd y Peiriant, Gwas y Glêr")
 
         # tools
         self.seinyddwr = Seinyddwr()
@@ -142,7 +142,8 @@ class Peiriant(object):
                 ss.append(line)
         s = os.linesep.join(ss)
 
-        # mae hwn yn methu os oes mwy nag un "blank line"
+        # mae hwn yn methu os oes mwy nag un 
+        # "blank line" rhwng penillion
         # blociau = s.strip().split(os.linesep + os.linesep)
 
         # hac
@@ -392,33 +393,37 @@ class Peiriant(object):
 def main():
 
     pe = Peiriant()
+    
+    s = "Dwyglust feinion aflonydd"
 
-    s = "Trydar mwyn adar mynydd"
+#     s = "Trydar mwyn adar mynydd"
 
-    s = """Wele rith fel ymyl rhod - o'n cwmpas
-Campwaith dewin hynod.
-Hen linell bell nad yw'n bod
-Hen derfyn nad yw'n darfod."""
+#     s = """Wele rith fel ymyl rhod - o'n cwmpas
+# Campwaith dewin hynod.
+# Hen linell bell nad yw'n bod
+# Hen derfyn nad yw'n darfod."""
 
-    s = """
----
-teitl: Bechingalw
-awdur: Gerallt Emrys
----
-Wele rith fel ymyl rhod - o'n cwmpas
-Campwaith dewin hynod.
-Hen linell bell nad yw'n bod
-Hen derfyn nad yw'n darfod.
+#     s = """
+# ---
+# teitl: Bechingalw
+# awdur: Gerallt Emrys
+# ---
+# Wele rith fel ymyl rhod - o'n cwmpas
+# Campwaith dewin hynod.
+# Hen linell bell nad yw'n bod
+# Hen derfyn nad yw'n darfod.
 
-Nid eiddil pob eiddilwch,
-Tra dyn, nid llychyn pob llwch;
-Ac am hynny, Gymru, gwêl
-Y gŵr sydd ar y gorwel."""
+# Nid eiddil pob eiddilwch,
+# Tra dyn, nid llychyn pob llwch;
+# Ac am hynny, Gymru, gwêl
+# Y gŵr sydd ar y gorwel."""
 
     meta, uned = pe.parse(s)
     print('meta:', meta)
     print('uned:', uned)
     print(type(uned))
+    dat = pe.datryswr(uned)
+    print(repr(dat))
 
 
 if __name__ == "__main__":

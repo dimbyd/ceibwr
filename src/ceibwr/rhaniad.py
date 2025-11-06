@@ -68,7 +68,8 @@ class Rhaniad(TreeNode):
         if all([type(child) is Corfan for child in self.children]):
             return 1
         else:
-            return self.children[0].lefel() + 1
+            lefel_max = max([child.lefel() for child in self.children])
+            return lefel_max + 1
 
     def nifer_rhaniadau(self):
         return len(self.children)
@@ -85,6 +86,12 @@ class Rhaniad(TreeNode):
         for child in self.children:
             nodau.extend(child.nodau(terfyniadau=terfyniadau))
         return nodau
+
+    def sillafau(self):
+        sillafau = []
+        for child in self.children:
+            sillafau.extend(child.sillafau())
+        return sillafau
 
     def geiriau(self):
         geiriau = []

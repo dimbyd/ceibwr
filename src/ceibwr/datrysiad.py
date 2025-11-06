@@ -88,12 +88,14 @@ class Datrysiad(Rhaniad):
         return sum([child.nifer_sillafau() for child in self.children])
 
     # show
-    def aceniad_str(self):
+    def aceniad_str(self, pengoll=False):
         '''
         Aceniad rhaniad Lefel 1
         CAC, CDI, AAC, ADI
 
-        TODO: eithriadau megis SAG a'r cynganeddion pengoll
+        Achosion arbennig: 
+        1. Llinellau pengoll (e.e. mewn toddaid byr): mae angen hepgor y corfan olaf
+        2. Sain Gadwynog: mae angen cymharu'r cyntaf a'r trydydd.
         '''
 
         # check
@@ -105,14 +107,15 @@ class Datrysiad(Rhaniad):
 
         if self.dosbarth in ['LLU', 'LLL', 'LDO']:
             return ''
-        
+
         # if self.dosbarth in ['CBG', 'TBG', 'SBG', 'LBG']:
-        #     x = self.children[-3][-1]
-        #     y = self.children[-2][-1]
-        
-        # elif self.dosbarth in ['SGA']:
-        #     x = self.children[-3][-1]
-        #     y = self.children[-1][-1]
+        if pengoll and len(self.children) > 2:
+            x = self.children[-3][-1]
+            y = self.children[-2][-1]
+
+        elif self.dosbarth in ['SAG']:
+            x = self.children[-3][-1]
+            y = self.children[-1][-1]
 
         else:
             x = self.children[-2][-1]
@@ -213,6 +216,10 @@ class Datrysiad(Rhaniad):
 
         if self.lefel() == 1:
 
+            cyts_table = None
+            if hasattr(self, 'cytseinedd'):
+                cyts_table = self.cytseinedd.lookup()
+            
             # init
             rhaniad_strs = []
 
@@ -232,14 +239,14 @@ class Datrysiad(Rhaniad):
                     for nod in gair.nodau():  # + gair.terfyn:
 
                         if type(nod) is Llafariad:
-                            if hasattr(self, 'cytseinedd') and nod in gair.prif_lafariaid()[-2:]:
+                            if cyts_table and nod in gair.prif_lafariaid()[-2:]:
                                 gair_strs.append(acen_str)
                             else:
                                 gair_strs.append(bwlch*len(str(nod)))
 
                         elif type(nod) is Cytsain:
-                            if hasattr(self, 'cytseinedd') and nod in self.cytseinedd:
-                                dosb = self.cytseinedd[nod]
+                            if cyts_table and nod in cyts_table:
+                                dosb = cyts_table[nod]
                                 if cmap and dosb in cmap:
                                     gair_strs.append(beiro.write(str(nod), lliw=cmap[dosb]))
                                 else:
@@ -346,8 +353,14 @@ class Datrysiad(Rhaniad):
             xnew.children.append(cyrch)
             if hasattr(ynew, 'cytseinedd'):
                 for nod in cyrch.nodau():
-                    if nod in ynew.cytseinedd:
-                        xnew.cytseinedd[nod] = ynew.cytseinedd[nod]
+                    if nod in ynew.cytseinedd.gefyll:
+                        xnew.cytseinedd.gefyll.append(nod)
+                    elif nod in ynew.cytseinedd.gwreiddgoll:
+                        xnew.cytseinedd.gwreiddgoll.append(nod)
+                    elif nod in ynew.cytseinedd.canolgoll:
+                        xnew.cytseinedd.canolgoll.append(nod)
+                    elif nod in ynew.cytseinedd.pengoll:
+                        xnew.cytseinedd.pengoll.append(nod)
             
             xnew_row = xnew.create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
             ynew_row = ynew.create_rows(fullpad=fullpad, fancy=fancy, toriad=toriad, bwlch=bwlch, eol=eol, cmap=cmap)
@@ -401,7 +414,7 @@ class Datrysiad(Rhaniad):
                 tablefmt=fmt,
         )
 
-    # create printables
+    # printables
     def odlau_str(self):
 
         odlau_str = ''
@@ -410,7 +423,12 @@ class Datrysiad(Rhaniad):
             odlau_strs = []
             for od in self.odlau:
                 odlau_strs.append(''.join([str(nod) for nod in od.nodau(atalnodau=False, h2b=True)]))
-            odlau_str = min(odlau_strs, key=len)
+            # odlau_str = ' '.join(odlau_strs)
+            # print('odlau:', self.odlau)
+            # print('odlau_strs:', odlau_strs)
+            odlau_str = ''
+            if all([odlau_strs[0][-1] == odlau_strs[idx][-1] for idx in range(1,len(odlau_strs))]):
+                odlau_str = min(odlau_strs, key=len)
             # print('odlau_str:', odlau_str)
 
         odlau_cyrch_str = ''
@@ -428,13 +446,16 @@ class Datrysiad(Rhaniad):
 
         cytseinedd_str = ''
         if hasattr(self, 'cytseinedd'):
-            cyts = list(set([str(c).lower() for c in self.cytseinedd.nodau('GEF')]))
+            cyts = []
+            for tup in self.cytseinedd.gefyll:
+                cyts.extend([str(c).lower() for c in tup])
+            cyts = list(set(cyts))  # remove duplicates
             cyts.sort()
             cytseinedd_str = ' '.join(cyts)
         
         return cytseinedd_str 
 
-    # lookup tables for templates
+    # lookup tables for template colours
     def cyfuno_acenion(self):
         acenion = {}
         for child in self.children:
@@ -456,10 +477,11 @@ class Datrysiad(Rhaniad):
     def cyfuno_cytseinedd(self):
         if self.lefel() == 1:
             if hasattr(self, 'cytseinedd'):
-                return self.cytseinedd  # dict
+                return self.cytseinedd.lookup()
             return {}
         else:
             cyts = {}
+            
             for child in self.children:
                 cyts = cyts | child.cyfuno_cytseinedd()
             return cyts
@@ -515,6 +537,34 @@ class Datrysiad(Rhaniad):
         csv = os.linesep.join([','.join([str(z) for z in x]) for x in rows])
         print(csv)
 
+    # dyblygu ac amgodio odlau a gefyll
+    def set_nbrs(self):
+        # duplicate in calling environment if necessary
+        # from copy import deepcopy
+        # dat = deepcopy(self)
+        if hasattr(self, 'odlau'):
+            for odl in self.odlau:
+                odl.add_neighbours(self.odlau)
+        if hasattr(self, 'cytseinedd'):
+            for tup in self.cytseinedd.gefyll:
+                for nod in tup:
+                    nod.add_neighbours(tup)
+        if self.lefel() > 1:
+            for child in self.children:
+                child.set_nbrs()
+
+
+    # export to xml
+    # mae angen gwneud copi cyn setio `nbrs` gan mai
+    # attribute y datrysiad yw'r nbrs, nid yr
+    # uned (text) sylfaenol.
+    # def xml(self):
+    #     from copy import deepcopy
+    #     dat = deepcopy(self)
+
+    #     return dat.xml()
+
+
 
 # -----------
 # null object (synonym for `Datrysiad` with `dosbarth=None`)
@@ -540,11 +590,42 @@ def main():
     s = """Llewpart a dart yn ei din"""
     ll = Llinell(s)
     dat = datryswr_llinell(ll)
+
+    from copy import deepcopy
+    dat2 = deepcopy(dat)
+    dat2.set_nbrs()
+
+    print(ll.xml_str(pretty_print=True))
+    print()
+    print(dat.xml_str(pretty_print=True))
+    print()
+    print(dat2.xml_str(pretty_print=True))
+
+    print(dat.cytseinedd_str())
+
+    sillafau = dat2.sillafau()  # with nbrs
+    for sillaf in sillafau:
+        print('sillaf:', repr(sillaf))
+        if sillaf.odl().neighbours:
+            print('  odl:', sillaf, sillaf.odl().neighbours)
+            print('    parent:', sillaf.parent)
+            print('    nbrs:', [str(nbr.parent.parent) for nbr in sillaf.odl().neighbours])
+
+    nodau = dat2.nodau()  # with nbrs
+    for nod in nodau:
+        print('nod:', repr(nod))
+        if nod.neighbours:
+            print('  cyts:', nod, nod.neighbours)
+            print('    parent:', nod.parent, type(nod.parent))
+
+    return
+
+    # test tabular
     tab = dat.create_tabular(fancy=True, cmap=cmap)
     print(tab)
     rows = dat.create_rows(fullpad=True, headers=True)
     print(rows)
-
+    
     # Test Pennill (MES)
     from ceibwr.pennill import Pennill
     from ceibwr.datryswr_pennill import datryswr_pennill

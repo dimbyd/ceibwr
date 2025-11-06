@@ -200,7 +200,7 @@ def prawf_cytseinedd(x, y, proest=False):
     if type(x) is not Corfan or type(y) is not Corfan:
         raise TypeError('Mae angen dau wrthrych `Corfan` fan hyn.')
 
-    # init
+    # init record
     cyts = Cytseinedd()  # default: dosbarth = None
 
     # mae'r symbol `x` yn caei ei trasho rhywle ar hyd y ffordd
@@ -345,33 +345,45 @@ def prawf_cytseinedd(x, y, proest=False):
 
     # --------------------
     # cofnodi
-    cyts.gefelliaid = gefyll
+    cyts.gefyll = gefyll
     cyts.gwreiddgoll = x_blaen
     cyts.canolgoll = y_blaen
-
-    for x, y in gefyll:
-        x.add_neighbour(y)
-        y.add_neighbour(x)
-
-    # create lookup
-    for par in gefyll:
-        for nod in par:
-            cyts[nod] = 'GEF'
-
-    for nod in x_blaen:
-        cyts[nod] = 'GWG'
-
-    for nod in y_blaen:
-        cyts[nod] = 'TRA'
+    cyts.pengoll = x_diwedd + y_diwedd
 
     for nod in nodau_cyswllt:
-        cyts[nod] = 'CYS'
-
+        cyts.special[nod] = 'CYS'
     if nod_trychben is not None:
-        cyts[nod_trychben] = 'TRB'
-
+        cyts.special[nod_trychben] = 'TRB'
     for nod in nodau_cysylltben:
-        cyts[nod] = 'CYB'
+        cyts.special[nod] = 'CYB'
+
+    #  TODO: problem fan hyn. Mae angen creu copi o'r
+    # datrysiad cyn gosod `neighbours`
+    #
+    # for x, y in gefyll:
+    #     x.add_neighbour(y)
+    #     y.add_neighbour(x)
+
+    # # create lookup
+    # for par in gefyll:
+    #     for nod in par:
+    #         cyts[nod] = 'GEF'
+
+    # for nod in x_blaen:
+    #     cyts[nod] = 'GWG'
+
+    # for nod in y_blaen:
+    #     cyts[nod] = 'TRA'
+
+    # for nod in nodau_cyswllt:
+    #     cyts[nod] = 'CYS'
+
+    # if nod_trychben is not None:
+    #     cyts[nod_trychben] = 'TRB'
+
+    # for nod in nodau_cysylltben:
+    #     cyts[nod] = 'CYB'
+
 
     # --------------------
     # dosbarthu: oes angen hwn fan hyn? 
@@ -384,7 +396,6 @@ def prawf_cytseinedd(x, y, proest=False):
     # Ond mae hefyd angen upper limit er mwyn
     # osgoi cyfateb dim cytseiniaid o flaen yr
     # acenion. Felly mae angen checko bod |gefyll_blaen| > 0 ?
-
 
     # 1. croes (cyfatebiaeth union)
     if not x_blaen and not y_blaen:
@@ -484,7 +495,7 @@ def main():
     ]
 
     for key in [
-        # "croes",
+        "croes",
         # "traws",
         # "traws_fantach",
         # "croes_o_gyswllt",
@@ -496,7 +507,7 @@ def main():
         # "dau-yn-ateb-un",
         # "croes_o_gyswllt_ewinog",
         # "misc",
-        "problem",
+        # "problem",
     ]:
         print("\n------------------------------")
         print(key.upper())
@@ -521,12 +532,14 @@ def main():
             cyts = prawf_cytseinedd(x, y)
             # print('dosb2:', cyts.dosbarth)
             if cyts.dosbarth:
-                print(cyts)
                 if cyts.dosbarth in ('CWG, TWG'):
                     print(beiro.melyn(cyts.dosbarth))
                 else:
                     dosb = llythrenwau['cynghanedd'][cyts.dosbarth]
                     print(beiro.gwyrdd(dosb))
+                print('---------------')
+                print(cyts)
+                print('---------------')
 
             else:
                 print(beiro.coch('DIM'))

@@ -284,13 +284,46 @@ class Odl(TreeNode):
     def nodau(self, atalnodau=True, h2b=False):
         a = self.cnewyllyn().nodau(atalnodau=atalnodau)
         if h2b:
-            # print('H2B-BEF:', a)
-            # print('H2B-XXX:', hir2byr['â'])
-            # print('boo:', ('â' in hir2byr))
             a = [hir2byr[nod.text] if nod.text in hir2byr else nod.text for nod in a]
-            # print('H2B-AFT:', a)
         b = self.coda().nodau(atalnodau=atalnodau)
         return a + b
+
+    def prif_lafariad(self):
+        '''
+        Canfod y nod sy'n cario'r acen.
+        '''
+
+        # anwybyddu atalnodau e.e. a'i, o'u, "nesa'", ayb)
+        nodau = self.children[0].nodau(atalnodau=False)
+
+        # cnewyll unsain
+        if len(nodau) == 1:
+            return nodau[0]
+
+        # cnewyll ddeusain
+        elif len(nodau) == 2:
+            ds = nodau[0].sain_fer().lower() + nodau[1].sain_fer().lower()
+            # print('ds:', ds)
+            if ds in dosbarth_deusain:
+                if ds in deuseiniaid["lleddf"]:
+                    #   lleddf: acen ar y llarariad cyntaf
+                    #   'aw', 'ew', 'ai', 'eu', ...
+                    return nodau[0]
+                else:
+                    #   talgron: acen ar yr ail lafariad
+                    #   'ia', 'ie', 'we', 'wi', ...
+                    return nodau[1]
+            else:
+                # raise ValueError("Heb adnabod y ddeusain `{}`".format(ds))
+                return nodau[0]
+
+        # cnewyll drisain (acen bob amser ar y llafariad ganol)
+        elif len(nodau) == 3:
+            return nodau[1]
+
+        # Dylai clymau bedwarsain fod wedi eu hollti yn 
+        # `Gair` felly ni ddylen ni gyrraedd fan hyn ...
+        return None
 
 
 class Sillaf(TreeNode):
@@ -348,41 +381,42 @@ class Sillaf(TreeNode):
         return self.cyrch().children + self.cnewyllyn().children + self.coda().children
 
     def prif_lafariad(self):
-        '''
-        Canfod y nod sy'n cario'r acen.
-        '''
+        return self.odl().prif_lafariad()
+        # '''
+        # Canfod y nod sy'n cario'r acen.
+        # '''
 
-        # anwybyddu atalnodau e.e. a'i, o'u, "nesa'", ayb)
-        nodau = self.cnewyllyn().nodau(atalnodau=False)
+        # # anwybyddu atalnodau e.e. a'i, o'u, "nesa'", ayb)
+        # nodau = self.cnewyllyn().nodau(atalnodau=False)
 
-        # cnewyll unsain
-        if len(nodau) == 1:
-            return nodau[0]
+        # # cnewyll unsain
+        # if len(nodau) == 1:
+        #     return nodau[0]
 
-        # cnewyll ddeusain
-        elif len(nodau) == 2:
-            ds = nodau[0].sain_fer().lower() + nodau[1].sain_fer().lower()
-            # print('ds:', ds)
-            if ds in dosbarth_deusain:
-                if ds in deuseiniaid["lleddf"]:
-                    #   lleddf: acen ar y llarariad cyntaf
-                    #   'aw', 'ew', 'ai', 'eu', ...
-                    return nodau[0]
-                else:
-                    #   talgron: acen ar yr ail lafariad
-                    #   'ia', 'ie', 'we', 'wi', ...
-                    return nodau[1]
-            else:
-                # raise ValueError("Heb adnabod y ddeusain `{}`".format(ds))
-                return nodau[0]
+        # # cnewyll ddeusain
+        # elif len(nodau) == 2:
+        #     ds = nodau[0].sain_fer().lower() + nodau[1].sain_fer().lower()
+        #     # print('ds:', ds)
+        #     if ds in dosbarth_deusain:
+        #         if ds in deuseiniaid["lleddf"]:
+        #             #   lleddf: acen ar y llarariad cyntaf
+        #             #   'aw', 'ew', 'ai', 'eu', ...
+        #             return nodau[0]
+        #         else:
+        #             #   talgron: acen ar yr ail lafariad
+        #             #   'ia', 'ie', 'we', 'wi', ...
+        #             return nodau[1]
+        #     else:
+        #         # raise ValueError("Heb adnabod y ddeusain `{}`".format(ds))
+        #         return nodau[0]
 
-        # cnewyll drisain (acen bob amser ar y llafariad ganol)
-        elif len(nodau) == 3:
-            return nodau[1]
+        # # cnewyll drisain (acen bob amser ar y llafariad ganol)
+        # elif len(nodau) == 3:
+        #     return nodau[1]
 
-        # Caiff clymau bedwarsain eu hollti yn `Gair`
-        # felly ni ddylem gyrraedd fan hyn ...
-        return None
+        # # Caiff clymau bedwarsain eu hollti yn `Gair`
+        # # felly ni ddylem gyrraedd fan hyn ...
+        # return None
 
     def is_ysgafn(self):
         """Gwirio os yw'r sillaf yn ysgafn (prif lafariad hir)."""

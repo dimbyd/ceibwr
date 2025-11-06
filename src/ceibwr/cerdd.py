@@ -2,6 +2,7 @@
 import os
 from ceibwr.base import TreeNode
 from ceibwr.pennill import Pennill
+from ceibwr.nod import Bwlch
 
 
 class Cerdd(TreeNode):
@@ -48,6 +49,21 @@ class Cerdd(TreeNode):
             child.acenion_str(blanksymbol=blanksymbol)
             for child in self.children
             ])
+
+    # useful
+    def nodau(self, gofod=False):
+        s = []
+        for child in self.children:
+            s.extend(child.nodau(gofod=gofod))
+            if gofod:
+                s.append(Bwlch())
+        return s
+
+    def sillafau(self):
+        s = []
+        for child in self.children:
+            s.extend(child.sillafau())
+        return s
 
     def geiriau(self):
         s = []

@@ -14,55 +14,56 @@ class Odlau():
     Rhestr o wrthrychau `Odl`, sef ail ran sillaf (h.y. "Rime")
     Gall hyn berthyn i wrthrychau:
      (1) `Cynghanedd`: odl fewnol,
-     (2) `Cwpleda `Mesur`: prifodl neu odl gyrch.
+     (2) `Cwpled`: odl / odl gyrch.
+     (3) `Mesur`: prifodl
 
     '''
     def __init__(self, odlau=None):
 
-        self.odlau = []
+        self._odlau = []  # inner
         self.dosbarth = None
         self.hysbys = []
 
         if odlau:
             if not all([type(x) is Odl for x in odlau]):
                 raise TypeError('Mae angen `list[Odl]` fan hyn.')
-            self.odlau = odlau
+            self._odlau = odlau
 
     def __str__(self):
-        return str(self.odlau)
+        return str(self._odlau)
 
     def __len__(self):
-        return len(self.odlau)
+        return len(self._odlau)
 
     def __add__(self, other):
         if isinstance(other, Odlau):
-            odlau = self.odlau + other.odlau
+            odlau = self._odlau + other._odlau
             odlau = list(set(odlau))  # remove duplicates
             od = Odlau(odlau=odlau)
             return od
 
     def __bool__(self):
-        if len(self.odlau) > 0:
+        if len(self._odlau) > 0:
             return True
         return False
 
     def __setitem__(self, idx, odl):
         if not isinstance(odl, Odl):
             raise ValueError('Mae angen `Odl` fan hyn.')
-        self.odlau[idx] = odl
+        self._odlau[idx] = odl
 
     def __getitem__(self, idx):
-        return self.odlau[idx]
+        return self._odlau[idx]
 
     def append(self, item):
         if not isinstance(item, Odl):
             raise TypeError("Mae angen `Odl` fan hyn.")
-        self.odlau.append(item)
+        self._odlau.append(item)
 
     def extend(self, items):
         if not all([isinstance(item, Odl) for item in items]):
             raise TypeError("Mae angen rhestr o wrthrychau `Odl` fan hyn.")
-        self.odlau.extend(items)
+        self._odlau.extend(items)
 
 
 # ------------------------------------------------
@@ -78,13 +79,13 @@ def main():
     odlau2.dosbarth = 'ODL'
     print(odlau2)
 
-    odlau.odlau.extend(odlau2.odlau)
+    odlau._odlau.extend(odlau2._odlau)
     print(odlau)
 
     tmp = odlau + odlau2
     print('tmp:', tmp)
     print('type:', type(tmp))
-    print('parts:', tmp.odlau)
+    print('parts:', tmp._odlau)
 
 
 if __name__ == "__main__":

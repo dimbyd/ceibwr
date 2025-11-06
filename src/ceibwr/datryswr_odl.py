@@ -240,7 +240,7 @@ def prawf_odl_gyswllt(x, y):
     return odlau
 
 
-def prawf_odl_sylfaenol(x, y, trwm_ac_ysgafn=False, add_neighbours=False):
+def prawf_odl_sylfaenol(x, y, trwm_ac_ysgafn=False, add_neighbours=True):
     """
     Gwirio am odl neu broest sylfaenol rhwng dwy `Sillaf`
     Mae'r gymhariaeth ar sail `nod.sain` felly maen'n rhaid 
@@ -296,7 +296,10 @@ def prawf_odl_sylfaenol(x, y, trwm_ac_ysgafn=False, add_neighbours=False):
     x_cnew = x.cnewyllyn().nodau(atalnodau=False)
     y_cnew = y.cnewyllyn().nodau(atalnodau=False)
 
-    # talfyrru cnewyll trisain ()
+    # talfyrru cnewyll trisain
+    # dim ond y ddwy lafariad olaf sy'n bwysig mewn odl
+    # dylai hollti cyfuniadau deusill/teirsill fod wedi
+    # ei wneud cyn hyn (h.y. yn constructor `Gair`)
     if len(x_cnew) > 2:
         x_cnew = x_cnew[-2:]
     if len(y_cnew) > 2:
@@ -388,11 +391,27 @@ def prawf_odl_sylfaenol(x, y, trwm_ac_ysgafn=False, add_neighbours=False):
         # end cases
 
     # set nbds (cofnodi odlau)
+    # TODO: problem: mae hyn yn newid y nodau
+    # sylfaenol. h.y. rheini sydd yn rhan o'r
+    # uned gwreiddiol. Felly mae gefyll ac odlau
+    # datrysiadau aflwyddianus wedi eu amgodio
+    # yn y neighbours !!
+    #
+    # Beth am un `dict` o'r enw `nbrs` ar lefel
+    # y datrysiad, sy'n cofnodi gefyll ac odlau?
+    # nbrs{treenode: [treenode, treenode,],}
+    # dim ond y cysylltiad sy'n bwysig, mae'r math
+    # o gysylltiad yn dibynnu ar p'un ai cystain
+    # neu odl yw'r `key`. 
+    #
+    # Ond dyma essentially beth mae'r objects
+    # `Odlau` a `Cytseniedd` yn gwneud! 
     if dosbarth == 'ODL' and add_neighbours:
-        x.odl().add_neighbours(y.odl().neighbours)
-        y.odl().add_neighbours(x.odl().neighbours)
-        x.odl().add_neighbour(y.odl())
-        y.odl().add_neighbour(x.odl())
+        pass
+        # x.odl().add_neighbours(y.odl().neighbours)
+        # y.odl().add_neighbours(x.odl().neighbours)
+        # x.odl().add_neighbour(y.odl())
+        # y.odl().add_neighbour(x.odl())
 
     # cofnodi odlau
     odlau = Odlau()
@@ -423,7 +442,7 @@ def prawf_odl_sylfaenol(x, y, trwm_ac_ysgafn=False, add_neighbours=False):
 
 
 # =====================
-# stwff newydd
+# stwff newydd (not used)
 
 def prawf_codas(x, y):
     """
@@ -646,6 +665,7 @@ def main():
         ("helynt", "gwynt"),
         ("ddôr", "agor"),
         ("Cyffredin", "gwin"),
+        ("Trwsio", "golewo"),
     )
 
     for key in [
@@ -716,7 +736,9 @@ def main():
             # show
             if odlau and odlau.dosbarth:
                 print(beiro.cyan(odlau.dosbarth))
-                print(odlau)
+                for odl in odlau:
+                    print(odl, odl.neighbours)
+
             else:
                 print(beiro.coch('XXX'))
             print("--------------------")

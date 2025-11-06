@@ -3,6 +3,7 @@
 import os
 from ceibwr.base import TreeNode
 from ceibwr.llinell import Llinell
+from ceibwr.nod import Bwlch
 
 
 class Pennill(TreeNode):
@@ -75,10 +76,18 @@ class Pennill(TreeNode):
         return sum([child.nifer_geiriau() for child in self.children])
 
     # useful
-    def nodau(self):
+    def nodau(self, gofod=False):
         s = []
         for child in self.children:
-            s.extend(child.nodau())
+            s.extend(child.nodau(gofod=gofod))
+            if gofod:
+                s.append(Bwlch())
+        return s
+
+    def sillafau(self):
+        s = []
+        for child in self.children:
+            s.extend(child.sillafau())
         return s
 
     def geiriau(self):

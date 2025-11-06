@@ -29,7 +29,8 @@ from ceibwr.corfan import Corfan
 from ceibwr.odlau import Odlau
 from ceibwr.datrysiad import Amwys
 
-from ceibwr.cwpled import Cwpled, Toddaid, ToddaidByr, ToddaidHir
+from ceibwr.cwpled import Cwpled, CwpledCaeth
+from ceibwr.cwpled import Toddaid, ToddaidByr, ToddaidHir
 
 from ceibwr.datryswr_llinell import datryswr_llinell
 
@@ -65,13 +66,17 @@ def datryswr_pennill(pennill, fesul_llinell=False):
     for llinell in pennill.children:
         dat = datryswr_llinell(llinell, pengoll=True)
         dats.append(dat)
-    
+
     # debug
     if fesul_llinell:
         return Amwys(dats)  # rhestr o ddatrysiadau llinell yn unig
 
     # -----------------------------------
     # Prawf mesur
+
+    # ------------------------------
+    # 0. dim byd
+    # ------------------------------
     if not dats:
         return []
 
@@ -89,14 +94,14 @@ def datryswr_pennill(pennill, fesul_llinell=False):
         return prawf_cwpled(x1, x2)
 
     # ------------------------------
-    # 3. tair
+    # 3. tair llinell
     # ------------------------------
     elif len(dats) == 3:
         x1, x2, x3 = dats
 
         return prawf_triawd(x1, x2, x3)
     # ------------------------------
-    # 3. pedair neu fwy
+    # 4. pedair
     # ------------------------------
     else:
         if len(dats) == 4:
@@ -104,16 +109,22 @@ def datryswr_pennill(pennill, fesul_llinell=False):
             dat = prawf_cwatrain(x1, x2, x3, x4)
             if dat.dosbarth:
                 return dat
+    
+    # ------------------------------
+    # 5. TODO: chwech/wyth/deg am HAT etc
+    # ------------------------------
+
+    # ------------------------------
+    # X. chwilio am gwpledi
+    # ------------------------------
 
     # canfod cwpledi
     dat_seq = []
-
     seq = list(reversed(dats))
     x = seq.pop()
     while seq:
         y = seq.pop()
         dat_cwpled = prawf_cwpled(x, y)
-        # if dat_cwpled.dosbarth and type(x) not in [CroesBengoll, TrawsBengoll]:
         if dat_cwpled.dosbarth:
             dat_seq.append(dat_cwpled)
             x = seq.pop() if seq else None
@@ -123,37 +134,45 @@ def datryswr_pennill(pennill, fesul_llinell=False):
     if x is not None:
         dat_seq.append(x)
 
+    # hac: kill CBG/TBG
+    for idx, dat in enumerate(dat_seq):
+        if isinstance(dat, CwpledCaeth) and not isinstance(dat, (Toddaid, ToddaidByr, ToddaidHir)):
+            pengoll_found = False
+            if type(dat[0]) in [CroesBengoll, TrawsBengoll]:
+                corfan_sengl = [x for corfan in dat[0] for x in corfan]
+                dat[0] = Amwys([Corfan(corfan_sengl)])
+                pengoll_found = True
+            if type(dat[1]) in [CroesBengoll, TrawsBengoll]:
+                corfan_sengl = [x for corfan in dat[1] for x in corfan]
+                dat[1] = Amwys([Corfan(corfan_sengl)])
+                pengoll_found = True
+            if pengoll_found:
+                dat_seq[idx] = Cwpled(dat[0], dat[1], dat.odlau)
+        elif type(dat) in [CroesBengoll, TrawsBengoll]:
+            corfan_sengl = [x for corfan in dat for x in corfan]
+            dat_seq[idx] = Amwys([Corfan(corfan_sengl)])
+
+
+    # Syniad gwael. Gwell gadael yr odlau yn y cwpledi and/or
+    # yn y mesurau tair llinell neu bedair llinell. 
     # concat odlau
-    odlau = Odlau()
-    for dat in dat_seq:
-        if hasattr(dat, 'odlau'):
-            odlau.extend(dat.odlau)
+    # odlau = Odlau()
+    # for dat in dat_seq:
+    #     if hasattr(dat, 'odlau'):
+    #         odlau.extend(dat.odlau)
 
     # Cywydd Deuair Hirion (CDH)
     if all([type(dat) is CwpledCywyddSeithsill for dat in dat_seq]):
 
         # TODO: check os yw'r odlau yn newid am yn ail
         from ceibwr.mesur import CywyddDeuairHirion
-        return CywyddDeuairHirion(dat_seq, odlau=odlau)
+        return CywyddDeuairHirion(dat_seq)
 
     # Cywydd Deuair Fyrion (CDF)
     if all([type(dat) is CwpledCywyddBedairsill for dat in dat_seq]):
 
         from ceibwr.mesur import CywyddDeuairFyrion
-        return CywyddDeuairFyrion(dat_seq, odlau)
-
-    # hac: kill CBG/TBG
-    for idx, dat in enumerate(dat_seq):
-        if isinstance(dat, Cwpled) and not isinstance(dat, (Toddaid, ToddaidByr, ToddaidHir)):
-            if type(dat[0]) in [CroesBengoll, TrawsBengoll]:
-                corfan_sengl = [x for corfan in dat[0] for x in corfan]
-                dat[0] = Amwys([Corfan(corfan_sengl)])
-            if type(dat[1]) in [CroesBengoll, TrawsBengoll]:
-                corfan_sengl = [x for corfan in dat[1] for x in corfan]
-                dat[1] = Amwys([Corfan(corfan_sengl)])
-        elif type(dat) in [CroesBengoll, TrawsBengoll]:
-            corfan_sengl = [x for corfan in dat for x in corfan]
-            dat_seq[idx] = Amwys([Corfan(corfan_sengl)])
+        return CywyddDeuairFyrion(dat_seq)
 
     # dim mesur
     return Amwys(dat_seq)

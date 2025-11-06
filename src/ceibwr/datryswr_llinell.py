@@ -13,7 +13,7 @@ from ceibwr.rhaniad import Trychwr
 
 from ceibwr.datryswr_cynghanedd import (
     prawf_cynghanedd,
-    chwynnu,
+    hidlo,
     best_guess,
 )
 
@@ -63,7 +63,13 @@ def datryswr_llinell(llinell, unigol=True, pengoll=False):
         
         datrysiadau.append(datrysiad)
 
-    datrysiadau = chwynnu(datrysiadau, dileu_gwreiddgoll=True)
+    # print(llinell)
+    # print(datrysiadau)
+    # print()
+
+    datrysiadau = hidlo(datrysiadau, dileu_gwreiddgoll=True)
+
+    # print(datrysiadau)
 
     # dim byd
     if not datrysiadau:
@@ -156,45 +162,29 @@ def main():
     )
 
     for key in [
-            # 'croes',
-            # 'traws',
-            # 'llusg',
-            # 'sain',
-            # 'croes_o_gyswllt',
-            # 'sain_o_gyswllt',
-            # 'sain_gadwynog',
-            # 'trychben',
-            # 'cysylltben',
-            # 'traws_fantach',
-            # 'llusg_lafarog',
-            # 'llusg_gudd',
-            # 'llusg_ewinog',
-            # 'sain_gudd', 
-            # 'sain_ewinog',
-            # 'sain_lafarog',
-            # 'seingroes',
-            # 'trawsgroes',
-            # 'seindraws',
-            # 'croeslusg',
-            # 'seinlusg',
-            # 'trawslusg',
-            # 'llusg_deirodl',
-            # 'sain_deirodl',
-            # 'sain_ddwbl',
-            # 'misc',
-            # 'sain_siwr',
-            # 'problem',
-            # 'aberteifi',
-            # 'randoms',
-            # 'prawf_me',
-            # 'prawf_metoo',
-            # 'ac_nid_ag',
-            # 'sicr_wallus',
-            # 'posib_wallus',
+            'croes',
+            'traws',
+            'llusg',
+            'sain',
+            'croes_o_gyswllt',
+            'sain_o_gyswllt',
+            'sain_gadwynog',
+            'trychben',
+            'cysylltben',
+            'traws_fantach',
+            'llusg_lafarog',
+            'llusg_gudd',
+            'llusg_ewinog',
+            'sain_gudd', 
+            'sain_ewinog',
+            'sain_lafarog',
+            'llusg_deirodl',
+            'sain_deirodl',
+            'sain_ddwbl',
+            'ac_nid_ag',
+            # 'pengoll',
             # 'problem_seinyddio',
-            # 'pengoll',
-            'problem',
-            # 'pengoll',
+            # 'problem',
     ]:
 
         print('\n\n==============================')

@@ -31,7 +31,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def prawf_cynghanedd(rhaniad, unigol=True, pengoll=False, TAY=False):
+def prawf_cynghanedd(rhaniad, unigol=True, gwreiddgoll=False, pengoll=False):
     '''
     Omnibus test: darganfod, hidlo a cyfuno
     '''
@@ -40,13 +40,17 @@ def prawf_cynghanedd(rhaniad, unigol=True, pengoll=False, TAY=False):
         rhaniad = rhaniad.children
 
     dats = prawf_cynghanedd_sylfaenol(rhaniad)
-
+    
     if pengoll:
         datsPG = prawf_cynghanedd_bengoll(rhaniad)
         if datsPG:
             dats.extend(datsPG)
 
-    dats = chwynnu(dats)
+    dats = hidlo(dats,
+                 dileu_gwreiddgoll=not gwreiddgoll,
+                 dileu_pengoll=not pengoll
+                 )
+    
     if not dats:
         dats = [Amwys([Corfan([x for corfan in rhaniad for x in corfan])])]
 
@@ -150,7 +154,7 @@ def prawf_cynghanedd_sylfaenol(rhaniad, TAY=False):
         # --------------------
         # 2.1 croes a thraws
         cyts12 = prawf_cytseinedd(x1, x2)
-
+        
         # llwyddiant (mae angen cyfateb o leiaf un par o gytseiniaid)
         if cyts12 and cyts12.dosbarth and cyts12.dosbarth not in ['LLA']:
             if cyts12.dosbarth == 'CRO':
@@ -205,7 +209,7 @@ def prawf_cynghanedd_sylfaenol(rhaniad, TAY=False):
 
             if cyts23.dosbarth:
 
-                if cyts23.gefelliaid:
+                if cyts23.gefyll:
                     if cyts23.dosbarth == "COG":
                         dat = SainGyswllt(rhaniad, odlau=odlau12, cytseinedd=cyts23)
                     else:
@@ -245,7 +249,7 @@ def prawf_cynghanedd_sylfaenol(rhaniad, TAY=False):
             odlau13 and odlau13.dosbarth in ["ODL", "OLA"] and
             cyts24 and cyts24.dosbarth
         ):
-            if cyts24.gefelliaid:
+            if cyts24.gefyll:
                 dat = SainGadwynog(rhaniad, odlau=odlau13, cytseinedd=cyts24)
                 datrysiadau.append(dat)
 
@@ -292,10 +296,16 @@ def prawf_cynghanedd_sylfaenol(rhaniad, TAY=False):
                         from ceibwr.cytseinedd import Cytseinedd
                         cyts = Cytseinedd()
                         cyts.dosbarth = 'DBL'
-                        for nod in cyts23:
-                            cyts[nod] = cyts23[nod]
-                        for nod in cyts45:
-                            cyts[nod] = cyts45[nod]
+                        cyts.gefyll = cyts23.gefyll + cyts45.gefyll
+                        cyts.gwreiddgoll = cyts23.gwreiddgoll + cyts45.gwreiddgoll
+                        cyts.canolgoll = cyts23.canolgoll + cyts45.canolgoll
+                        cyts.pengoll = cyts23.pengoll + cyts45.pengoll
+                        cyts.special = cyts23.special | cyts45.special
+
+                        # for nod in cyts23:
+                        #     cyts[nod] = cyts23[nod]
+                        # for nod in cyts45:
+                        #     cyts[nod] = cyts45[nod]
 
                         odlau = odlau12 + odlau34
                         dat = SainDdwbl(rhaniad, odlau=odlau, cytseinedd=cyts)
@@ -309,7 +319,7 @@ def prawf_cynghanedd_sylfaenol(rhaniad, TAY=False):
     return datrysiadau
 
 
-def chwynnu(datrysiadau,
+def hidlo(datrysiadau,
             dileu_gwreiddgoll=False,
             dileu_pengoll=False,
             dileu_nones=True):
@@ -532,7 +542,7 @@ def main():
     )
 
     for key in [
-            # 'croes',
+            'croes',
             # 'traws',
             # 'llusg',
             # 'sain',
@@ -551,7 +561,7 @@ def main():
             # 'llusg_deirodl',
             # 'sain_deirodl',
             # 'sain_ddwbl',
-            'pengoll',
+            # 'pengoll',
             # 'problem',
     ]:
 
@@ -576,6 +586,11 @@ def main():
                 dat = prawf_cynghanedd(rhaniad, pengoll=True)
             else:
                 dat = prawf_cynghanedd(rhaniad)
+
+            if hasattr(dat, 'cytseinedd'):
+                print('cyts:', dat.cytseinedd)
+            if hasattr(dat, 'odlau'):
+                print('odls:', dat.odlau)
 
             if not dat.dosbarth:
                 print(repr(dat))

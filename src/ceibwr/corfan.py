@@ -80,6 +80,12 @@ class Corfan(TreeNode):
                 nodau.extend(gair.terfyn)
         return nodau
 
+    def sillafau(self):
+        sillafau = []
+        for gair in self.children:
+            sillafau.extend(gair.children)
+        return sillafau
+
     def cytseiniaid(self):
         s = []
         for gair in self.children:

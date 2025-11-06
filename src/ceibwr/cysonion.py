@@ -162,7 +162,8 @@ str_cytseiniaid_base = "b,c,ch,d,dd,f,ff,g,ng,h,j,l,ll,m,n,p,ph,r,rh,s,t,th"
 str_cytseiniaid_ext = "ngh,mh,nh,sh,tsh,k,q,v,x,z"
 str_cytseiniaid = ','.join([str_cytseiniaid_base, str_cytseiniaid_ext])
 str_cytseiniaid_upper = "Ch,Dd,Ff,Ng,Ll,Mh,Nh,Ngh,Ph,Rh,Sh,Tsh,Th"
-str_llafariaid_byrion = "aeiouwyà"
+# str_llafariaid_byrion = "aeiouwyà"
+str_llafariaid_byrion = "aeiouwy"
 str_llafariaid_hirion = "âáäêéëîïöôûúŵẃŷý"
 
 atalnodau = list(str_atalnodau)
@@ -196,7 +197,7 @@ deuseiniaid = {
         "ia",  # cariad
         "ie",  # colier
         "io",  # cerfio, diolch?, chwiorydd?
-        "iw",  # cerfiwr (*)
+        "iw",  # cerfiwr (* hefyd yn lleddf: lliw)
         "iy",  # faliym
         "ua",  # ieuanc
         "wa",  # gwan
@@ -210,7 +211,7 @@ deuseiniaid = {
     "lleddf_cyntaf": [
         "aw",  # llaw, siawns
         "ew",  # llew
-        # "iw",  # ffiws (*)
+        "iw",  # lliw (* hefyd yn dalgron: cerfiwr *)
         "ow",  # bowns
         "uw",  # buwch, Duw, byw (y-olau)
         "yw",  # bywyd (y-dywyll)
@@ -236,10 +237,7 @@ deuseiniaid = {
     ],
 }
 
-dosbarth_deusain = dict(
-    [(z, key) for key in deuseiniaid.keys() for z in deuseiniaid[key]]
-)
-
+dosbarth_deusain = dict([(z, key) for key in deuseiniaid.keys() for z in deuseiniaid[key]])
 deuseiniaid["lleddf"] = copy(deuseiniaid["lleddf_cyntaf"])
 deuseiniaid["lleddf"] += copy(deuseiniaid["lleddf_ail"])
 deuseiniaid["lleddf"] += copy(deuseiniaid["lleddf_trydydd"])
@@ -316,6 +314,7 @@ llythrenwau = {
     },
     "cwpled": {
         "CWP": "Cwpled",
+        "CCA": "Cwpled Caeth",
         "CC4": "Cwpled Cywydd Bedairsill",
         "CC7": "Cwpled Cywydd Seithsill",
         "CAG": "Cwpled Awdl Gywydd",
@@ -324,7 +323,7 @@ llythrenwau = {
         "TOH": "Toddaid Hir",
         "CHF": "Cyhydedd Fer",
         "CHH": "Cyhydedd Hir",
-        "CH9": "Cyhydedd Nawban",
+        "CHN": "Cyhydedd Nawban",
     },
     "mesur": {
         "AWD": "Awdl",
@@ -385,7 +384,7 @@ blaenoriaeth = [
     'TFA',
     'CWG', 'TWG',
     'SBG', 'CBG', 'LBG', 'TBG',
-    'SEG', 'SED', 'SEL', 'TRG', 'TRL', 'CRL',
+    'SEG', 'SED', 'SEL', 'TRG', 'TRL', 'CRL',  
     None,
 ]
 
@@ -421,7 +420,7 @@ gogwyddeiriau = [
     "yw",
     "yw'r",
     "yw'n",
-    # collnodau # TODO: mae angen trawsnewid collnodau i'r nod ASCII pan yn darllen
+    # collnodau # TODO: mae angen trawsnewid collnodau i'r nod ASCII pan yn darllen ffeil
     "i’r",
     "i'r",
     "a'r",
@@ -510,7 +509,7 @@ cyfuniadau_caled = {
     ("b", "rh"): ("p", "r"),
 }
 
-# meddalu: c -> g, p -> b, t -> d
+# meddalu: p -> b, t -> d, c -> g
 cyfuniadau_meddal = {
     ("s", "t"): "d",
     # ("s", "c"): "g",  # cwmpas/campwaith
@@ -561,7 +560,6 @@ cyfuniadau_trychben = (
 # Noder bod treigliadau ond yn effeitio ar gyrch y sillaf cyntaf.
 eithriadau = {
     "hiatus": (
-        "diau",
         "dios",
         "diadell",
         "diofryd", "ddiofryd",
@@ -582,6 +580,7 @@ eithriadau = {
         "tua", "tuag", "tua'r",
     ),
     "triawdau_deusill_x|yz": (
+        "diau",
         "diwyd",
         "gweddiais", "weddiais",
         "rhiain", "riain",
@@ -590,6 +589,7 @@ eithriadau = {
     "triawdau_deusill_xy|z": (
         "chwiorydd",
     ),
+    # rhestr geiriau lluosill acennog
     "geiriau_lluosill_acennog": (
         "amen",
         "anabl",
@@ -606,19 +606,12 @@ eithriadau = {
         "llawenhau",
         "parhad",
         "ribidires",
+        "ymhell",
         "ymysg",
     ),
-    "llafariaid_hir_heb_acen_echblyg": (
-        "dyn",
-        "ffrwd",
-        "hir",
-        "rhod",
-        "rhwd",
-        "tan",
-    ),
-    # patrwm? geiriau unsill
-    # h.y. geiriau acennog
-    # c.f.
+    # rhestr geiriau gyda wy-dalgron/esgynedig
+    # oes rheolau am rhain?
+    # a fasai'n well rhestru geiriau wy-leddf/ddisgynedig?
     "wy-dalgron": (
         "dwyn",
         "llwyn",

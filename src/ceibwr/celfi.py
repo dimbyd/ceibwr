@@ -31,7 +31,6 @@ geirfa = GEIRIADURON['default']['GEIRFA']       # txt
 
 geiriau_lluosill_acennog = eithriadau['geiriau_lluosill_acennog']
 
-
 class Geirfa():
     def __init__(self, s):
 

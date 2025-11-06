@@ -89,15 +89,12 @@ class CywyddDeuairHirion(Mesur):
     '''
     Mewnbwn: rhestr o datrysiadau: [CC7, CC7, ...]
     '''
-    def __init__(self, rhaniad, odlau=None, parent=None):
+    def __init__(self, rhaniad, parent=None):
         Mesur.__init__(self, rhaniad, parent=parent)
 
         # type check
         if not all([type(x) is CwpledCywyddSeithsill for x in rhaniad]):
             raise TypeError("Mae angen `list[CC7]` fan hyn.")
-
-        # TODO: check odlau (er mwyn peidio creu gwrthrychau diffygiol)
-        self.odlau = odlau
 
         # llwyddiant
         self.dosbarth = 'CDH'

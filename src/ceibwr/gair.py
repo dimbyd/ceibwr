@@ -66,6 +66,7 @@ class Gair(TreeNode):
 
         # creu allwedd am lookups yn y rhestri eithriadau
         s_key = ''.join([x for x in s if x not in atalnodau]).lower()
+        # print('s_key:', s_key)
 
         # trawsnewid str i restr sillafau
         idx = 0
@@ -107,7 +108,7 @@ class Gair(TreeNode):
             # yn yr ail sillaf
             if len(key) == 2 and (
                 key in deuseiniaid["hiatus"] or
-                s in eithriadau["hiatus"] or (
+                s_key in eithriadau["hiatus"] or (
                     # priod, piod, diod, dianc, diadell, gwnio
                     cyrch.lower() in ["d", "p", "pr", "tr", "gwn"] and
                     key in ["io", "ia"]
@@ -118,6 +119,8 @@ class Gair(TreeNode):
                 continue
 
             elif len(key) == 3:
+                # print('s_key:', s_key, s_key in eithriadau['triawdau_deusill_x|yz'])
+                # print('key:', key)
                 xy = key[:2]
                 yz = key[1:]
                 
@@ -125,6 +128,7 @@ class Gair(TreeNode):
                     s_key in eithriadau['triawdau_deusill_x|yz'] or
                     xy in deuseiniaid["hiatus"]
                 ):
+                    # print('X|YZ:', s)
                     self.children.append(Sillaf(cyrch, cnew[0], "", parent=self))
                     self.children.append(Sillaf("", cnew[1:], coda, parent=self))
                     continue
@@ -359,6 +363,7 @@ def main():
         "on",  # sef odl `afon`
         "chwiorydd",
         "di-os",
+        "diau",
     )
 
     # for key in profion:

@@ -10,64 +10,101 @@ from ceibwr.cysonion import llythrenwau
 enwau = llythrenwau['cytsain']
 
 
-class Cytseinedd(dict):
+class Cytseinedd():
     '''
     Cofnod cytseinedd.
     Gall hyn berthyn i raniad `Cynghanedd` yn unig,
 
-    CRO     cyfatebol
-    TRA     cyfatebol + canolgoll
-    GWG     cyfatebol + gwreiddgoll
-    COG     cyfatebol + cyswllt
+    Dosbarthiadau cytseinedd
+    CRO     gefyll
+    TRA     gefyll + canolgoll
+    GWG     gefyll + gwreiddgoll
+    COG     gefyll + cyswllt
     PGO     corfan bengoll
-    LLA     cyfateb dan yr acen yn unig
+    LLA     dim cyfatebiaeth o flaen yr acen (dan yr acen yn unig)
 
     '''
     def __init__(self):
-        pass
+
         self.dosbarth = None
+
+        self.gefyll = []
+        self.gwreiddgoll = []
+        self.canolgoll = []
+        self.pengoll = []
+
+        self.special = {}
         self.hysbys = []
 
     def __str__(self):
-        dosb_str = llythrenwau['cynghanedd'][self.dosbarth]
-        s = [dosb_str]
-        for dosb in llythrenwau['cytsain']:
-            nodau = self.nodau(dosb)
-            if nodau:
-                s.append(llythrenwau['cytsain'][dosb] + ': ' + str(nodau))
+        s = [self.dosbarth]
+        s.append('GEF: ' + str(self.gefyll))
+        s.append('GWG: ' + str(self.gwreiddgoll))
+        s.append('CAG: ' + str(self.canolgoll))
+        s.append('PEG: ' + str(self.pengoll))
+        for key, val in self.special.items():
+            s.append(val + ': ' + str(key))
         return '\n'.join(s)
 
-    def nodau(self, val):
-        return [k for k, v in self.items() if v == val]
+    def dosbarth_cytsain(self, nod):
+        if nod in self.special:
+            return self.special[nod]
+        elif nod in [x for tup in self.gefyll for x in tup]:
+            return 'GEF'
+        elif nod in self.gwreiddgoll:
+            return 'GWG'
+        elif nod in self.canolgoll:
+            return 'CAG'
+        elif nod in self.pengoll:
+            return 'PEG'
+        else:
+            return None
+
+    def nodau(self):
+        nodau = [nod for tup in self.gefyll for nod in tup]
+        return nodau + self.gwreiddgoll + self.canolgoll + self.pengoll
+
+    def lookup(self):
+        return {nod: self.dosbarth_cytsain(nod) for nod in self.nodau()}
+        # lookup = {}
+        # for tup in self.gefyll:
+        #     for nod in tup:
+        #         lookup[nod] = 'GEF'
+        # for nod in self.gwreiddgoll:
+        #     lookup[nod] = 'GWG'
+        # for nod in self.canolgoll:
+        #     lookup[nod] = 'TRA'
+        # return lookup | self.special
 
     def dosbarth_cytseinedd(self):
-        x_blaen = [k for k, v in self.items() if v == 'GWG']
-        y_blaen = [k for k, v in self.items() if v == 'TRA']
-        clecs = [k for k, v in self.items() if v == 'GEF']
+        """
+        TODO: duplicate: self.dosbarth is set
+        by datryswr_cytseinedd()
+        """
 
         # 0. dim cyfatebiaeth
-        if not clecs:
+        if not self.gefyll:
             dosbarth = 'LLA'
 
         # 1. croes (cyfatebiaeth union)
-        elif not x_blaen and not y_blaen:
+        elif not self.gwreiddgoll and not self.canolgoll:
             dosbarth = "CRO"
 
         # 2. croes wreiddgoll
-        elif x_blaen and not y_blaen:
+        elif self.gwreiddgoll and not self.canolgoll:
 
             # croes n-wreidgoll
-            if len(x_blaen) == 1 and x_blaen[0].text.lower() == "n":
+            if len(self.gwreiddgoll) == 1 and self.gwreiddgoll[0].text.lower() == "n":
                 dosbarth = "CRO"
 
-            elif len(x_blaen) > 0:
+            elif len(self.gwreiddgoll) > 0:
                 dosbarth = 'CWG'
 
         # 3. traws
-        elif not x_blaen and y_blaen:
+        elif not self.gwreiddgoll and self.canolgoll:
 
             # croes n-ganolgoll
-            if len(y_blaen) == 1 and y_blaen[0].text.lower() == "n":
+            if len(self.canolgoll) == 1 and self.canolgoll[0].text.lower() == "n":
                 dosbarth = "CRO"
             
             # traws
@@ -75,8 +112,8 @@ class Cytseinedd(dict):
                 dosbarth = "TRA"
 
         # 4. traws wreiddgoll
-        elif x_blaen and y_blaen:
-            if len(x_blaen) == 1 and x_blaen[0].text.lower() == "n":
+        elif self.gwreiddgoll and self.canolgoll:
+            if len(self.gwreiddgoll) == 1 and self.gwreiddgoll[0].text.lower() == "n":
                 dosbarth = "TRA"
             else:
                 dosbarth = "TWG"
@@ -85,22 +122,20 @@ class Cytseinedd(dict):
 
 
 def main():
-    cytseinedd = Cytseinedd()
-    cytseinedd.dosbarth = 'CRO'
+    cyts = Cytseinedd()
+    cyts.dosbarth = 'CRO'
     
     from ceibwr.nod import Nod
     nod1 = Nod('d')
-    cytseinedd[nod1] = 'GEF'
     nod2 = Nod('ch')
-    cytseinedd[nod2] = 'CYS'
+    cyts.gefyll.append((nod1, nod2))
     nod3 = Nod('s')
-    cytseinedd[nod3] = 'PEG'
+    cyts.canolgoll.append(nod3)
 
-    print(cytseinedd)
-    print(cytseinedd.dosbarth)
+    print(cyts)
 
-    # print(cytseinedd.gefelliaid)
-    print(cytseinedd.nodau('GEF'))
+    print('----------')
+    print(cyts.lookup())
 
 
 if __name__ == "__main__":

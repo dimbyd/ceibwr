@@ -132,7 +132,10 @@ class TreeNode(object):
         xml_text = etree.tostring(self.xml(), pretty_print=pretty_print)
         xml_text = xml_text.decode("utf-8")
         if include_header:
-            return ''.join([r'<?xml version="1.0" encoding="UTF-8"?>', xml_text])
+            header = r'<?xml version="1.0" encoding="UTF-8"?>'
+            if pretty_print:
+                return '\n'.join([header , xml_text])
+            return ''.join([header , xml_text])
         return xml_text
 
     def add_neighbour(self, item):
