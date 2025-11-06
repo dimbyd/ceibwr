@@ -18,9 +18,7 @@ from ceibwr.corfan import Corfan
 from ceibwr.rhaniad import Rhaniad
 
 from ceibwr.cytseinedd import Cytseinedd
-
 from ceibwr.cysonion import cyfuniadau_trychben
-
 from ceibwr.seinyddwr import cyfatebiaeth
 
 
@@ -352,43 +350,13 @@ def prawf_cytseinedd(x, y, proest=False):
 
     for nod in nodau_cyswllt:
         cyts.special[nod] = 'CYS'
+
     if nod_trychben is not None:
         cyts.special[nod_trychben] = 'TRB'
+
     for nod in nodau_cysylltben:
         cyts.special[nod] = 'CYB'
 
-    #  TODO: problem fan hyn. Mae angen creu copi o'r
-    # datrysiad cyn gosod `neighbours`
-    #
-    # for x, y in gefyll:
-    #     x.add_neighbour(y)
-    #     y.add_neighbour(x)
-
-    # # create lookup
-    # for par in gefyll:
-    #     for nod in par:
-    #         cyts[nod] = 'GEF'
-
-    # for nod in x_blaen:
-    #     cyts[nod] = 'GWG'
-
-    # for nod in y_blaen:
-    #     cyts[nod] = 'TRA'
-
-    # for nod in nodau_cyswllt:
-    #     cyts[nod] = 'CYS'
-
-    # if nod_trychben is not None:
-    #     cyts[nod_trychben] = 'TRB'
-
-    # for nod in nodau_cysylltben:
-    #     cyts[nod] = 'CYB'
-
-
-    # --------------------
-    # dosbarthu: oes angen hwn fan hyn? 
-    # Pam na diffinio ffwythiant `dosbarth()` wedi seilio ar 
-    # y rhestri nodau, yn y dosbarth `Cytseinedd`.
 
     # croes/traws wreiddgoll
     # Mae'n bosib cael sawl cytsain gwreiddgoll
@@ -418,6 +386,8 @@ def prawf_cytseinedd(x, y, proest=False):
                 else:
                     cyts.dosbarth = "LLA"
                 cyts.hysbys.append("n-wreiddgoll")
+            else:
+                cyts.dosbarth = 'CWG'
         else:
             cyts.dosbarth = 'CWG'
 
@@ -444,9 +414,6 @@ def prawf_cytseinedd(x, y, proest=False):
                 ):
                     cyts.dosbarth = 'TFA'
 
-        # else:
-        #     cyts.dosbarth = "LLA"
-
     # 4. traws wreiddgoll
     elif x_blaen and y_blaen:
         if len(x_blaen) == 1:
@@ -459,9 +426,11 @@ def prawf_cytseinedd(x, y, proest=False):
         else:
             cyts.dosbarth = "TWG"
 
-    # dim
+    # dyle ni ddim cyrraedd fan hyn
     else:
-        cyts.dosbarth = None
+        print('nitemare')
+
+    # print('cyts:', cyts)
 
     return cyts
 
@@ -492,10 +461,11 @@ def main():
         ("Ar wely’r ferch;", "alar fu."),
         ("a gwin", "a gawn"),
         ("mewn llan", "a llys"),
+        ("ar frig", "y fron")
     ]
 
     for key in [
-        "croes",
+        # "croes",
         # "traws",
         # "traws_fantach",
         # "croes_o_gyswllt",
@@ -507,7 +477,7 @@ def main():
         # "dau-yn-ateb-un",
         # "croes_o_gyswllt_ewinog",
         # "misc",
-        # "problem",
+        "problem",
     ]:
         print("\n------------------------------")
         print(key.upper())
@@ -516,10 +486,7 @@ def main():
         for s1, s2 in prawf:
             x = Corfan([Gair(s) for s in s1.split(" ")])
             y = Corfan([Gair(s) for s in s2.split(" ")])
-            
-            # from ceibwr.llinell import Llinell
-            # Seinyddwr().seinyddio(Llinell(x1+x2))
-            
+
             rhaniad = Rhaniad([x, y])
             se.seinyddio(rhaniad)
 
@@ -530,7 +497,6 @@ def main():
             print(" | ".join([corfan.sain() for corfan in rhaniad]))
             print()
             cyts = prawf_cytseinedd(x, y)
-            # print('dosb2:', cyts.dosbarth)
             if cyts.dosbarth:
                 if cyts.dosbarth in ('CWG, TWG'):
                     print(beiro.melyn(cyts.dosbarth))
@@ -538,8 +504,8 @@ def main():
                     dosb = llythrenwau['cynghanedd'][cyts.dosbarth]
                     print(beiro.gwyrdd(dosb))
                 print('---------------')
-                print(cyts)
-                print('---------------')
+                # print(cyts)
+                # print('---------------')
 
             else:
                 print(beiro.coch('DIM'))

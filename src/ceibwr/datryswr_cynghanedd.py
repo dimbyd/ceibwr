@@ -533,6 +533,7 @@ def main():
         ("Trown i'r acer", "lawn cerrig"),  # mae angen odli 'er' a 'err'
         ("cwmpas", "campwaith"),
         ("- o'n cwmpas", "campwaith"),
+        ("Cân ddiddig", "ar frig", "y fron."),
         # ("car", "coch"),
         # ("cariad", "coryn"),
         # ("carsad", "corsyn"),
@@ -542,7 +543,7 @@ def main():
     )
 
     for key in [
-            'croes',
+            # 'croes',
             # 'traws',
             # 'llusg',
             # 'sain',
@@ -562,7 +563,7 @@ def main():
             # 'sain_deirodl',
             # 'sain_ddwbl',
             # 'pengoll',
-            # 'problem',
+            'problem',
     ]:
 
         print()

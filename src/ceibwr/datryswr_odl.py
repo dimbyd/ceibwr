@@ -666,6 +666,7 @@ def main():
         ("ddôr", "agor"),
         ("Cyffredin", "gwin"),
         ("Trwsio", "golewo"),
+        ("ddiddig", "frig"),
     )
 
     for key in [
@@ -737,18 +738,11 @@ def main():
             if odlau and odlau.dosbarth:
                 print(beiro.cyan(odlau.dosbarth))
                 for odl in odlau:
-                    print(odl, odl.neighbours)
+                    print(odl)
 
             else:
                 print(beiro.coch('XXX'))
             print("--------------------")
-
-            # odlau = prawf_odl_newydd(x, y)
-            # if odlau and odlau.dosbarth:
-            #     print(beiro.magenta(odlau.dosbarth))
-            #     print(odlau)
-            # else:
-            #     print(beiro.coch('XXX'))
             print("--------------------")
 
     return

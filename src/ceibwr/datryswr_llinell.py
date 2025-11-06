@@ -140,6 +140,7 @@ def main():
         "Cymryd, balch o febyd fum,",  
         # "Cyffredin, a gwin a gawn.",  # proest
         "fy nyn gan mewn llan a llys,",
+        "Cân ddiddig ar frig y fron.",
     )
 
     profion['problem_seinyddio'] = (
@@ -162,29 +163,29 @@ def main():
     )
 
     for key in [
-            'croes',
-            'traws',
-            'llusg',
-            'sain',
-            'croes_o_gyswllt',
-            'sain_o_gyswllt',
-            'sain_gadwynog',
-            'trychben',
-            'cysylltben',
-            'traws_fantach',
-            'llusg_lafarog',
-            'llusg_gudd',
-            'llusg_ewinog',
-            'sain_gudd', 
-            'sain_ewinog',
-            'sain_lafarog',
-            'llusg_deirodl',
-            'sain_deirodl',
-            'sain_ddwbl',
-            'ac_nid_ag',
+            # 'croes',
+            # 'traws',
+            # 'llusg',
+            # 'sain',
+            # 'croes_o_gyswllt',
+            # 'sain_o_gyswllt',
+            # 'sain_gadwynog',
+            # 'trychben',
+            # 'cysylltben',
+            # 'traws_fantach',
+            # 'llusg_lafarog',
+            # 'llusg_gudd',
+            # 'llusg_ewinog',
+            # 'sain_gudd', 
+            # 'sain_ewinog',
+            # 'sain_lafarog',
+            # 'llusg_deirodl',
+            # 'sain_deirodl',
+            # 'sain_ddwbl',
+            # 'ac_nid_ag',
             # 'pengoll',
             # 'problem_seinyddio',
-            # 'problem',
+            'problem',
     ]:
 
         print('\n\n==============================')
@@ -198,7 +199,9 @@ def main():
             # print(llinell.sain())
              
             # datrys
-            dat = datryswr_llinell(llinell, pengoll=True)
+            # dat = datryswr_llinell(llinell, pengoll=True)
+            # datrys
+            dat = datryswr_llinell(llinell)
 
             # show
             print()
