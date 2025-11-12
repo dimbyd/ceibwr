@@ -58,8 +58,8 @@ ipa_cyts = (
     ('ng', 'ŋ'),    # fy ngwely, trengi, rhwng
     ('ngh', 'ŋ̊'),   # fy nghŵn, yng Nghymru
     ('p', 'p'),     # pen, copa, map
-    ('r', 'r̥'),     # radio, garw, dŵr
-    ('rh', 'r'),    # rhestr, anrheg
+    ('r', 'r'),     # radio, garw
+    ('rh', 'r̥'),    # rhestr, anrheg
     ('s', 's'),     # Saesnes, swsus
     ('sh', 'ʃ'),    # siarad, siop, brwsh
     ('si', 'ʃ'),    # siarad, siop, brwsh

@@ -12,7 +12,7 @@ license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "lxml", "pyaml", "tabulate", "importlib", "python-slugify",
+    "geomstats", "numpy", "matplotlib", "lxml", "pyaml", "tabulate", "importlib", "python-slugify",
 ]
 
 [project.urls]
